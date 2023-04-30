@@ -49,13 +49,13 @@ ThemeData getApplicationTheme() {
       // * text theme
       textTheme: TextTheme(
           displayLarge: getSemiBoldTextStyle(
-              color: ColorManager.darkGrey, fontSize: FontSize.s16),
+              color: ColorManager.darkGrey, fontSize: FontSize.s16), //?used
           headlineLarge: getSemiBoldTextStyle(
               color: ColorManager.darkGrey, fontSize: FontSize.s16),
           headlineMedium: getRegularTextStyle(
-              color: ColorManager.darkGrey, fontSize: FontSize.s14),
+              color: ColorManager.darkGrey, fontSize: FontSize.s14), //?used
           titleMedium: getMediumTextStyle(
-              color: ColorManager.lightGrey, fontSize: FontSize.s14),
+              color: ColorManager.primary, fontSize: FontSize.s16), //?used
           bodyLarge: getRegularTextStyle(color: ColorManager.grey1),
           bodySmall: getRegularTextStyle(color: ColorManager.grey)),
       // input decoration theme (text form field)
