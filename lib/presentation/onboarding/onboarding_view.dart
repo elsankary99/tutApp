@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tutapp/presentation/resources/assets_manager.dart';
 import 'package:tutapp/presentation/resources/color_manager.dart';
+import 'package:tutapp/presentation/resources/constants_manager.dart';
+import 'package:tutapp/presentation/resources/routs_manager.dart';
 import 'package:tutapp/presentation/resources/string_manager.dart';
 import 'package:tutapp/presentation/resources/value_manager.dart';
 
@@ -72,7 +74,10 @@ class _OnBoardingViewState extends State<OnBoardingView> {
               Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(
+                          context, Routes.loginRoute);
+                    },
                     child: const Text(
                       AppStrings.skip,
                       textAlign: TextAlign.end,
@@ -92,6 +97,14 @@ class _OnBoardingViewState extends State<OnBoardingView> {
         Padding(
           padding: const EdgeInsets.all(AppPadding.p14),
           child: GestureDetector(
+            onTap: () {
+              _pageController.animateToPage(
+                _getNextIndex(),
+                duration: const Duration(
+                    milliseconds: AppConstants.sliderAnimationTime),
+                curve: Curves.bounceInOut,
+              );
+            },
             child: SizedBox(
               height: AppSize.s20,
               width: AppSize.s20,
@@ -113,6 +126,14 @@ class _OnBoardingViewState extends State<OnBoardingView> {
         Padding(
           padding: const EdgeInsets.all(AppPadding.p14),
           child: GestureDetector(
+            onTap: () {
+              _pageController.animateToPage(
+                _getPreviousIndex(),
+                duration: const Duration(
+                    milliseconds: AppConstants.sliderAnimationTime),
+                curve: Curves.bounceInOut,
+              );
+            },
             child: SizedBox(
               height: AppSize.s20,
               width: AppSize.s20,
@@ -122,6 +143,25 @@ class _OnBoardingViewState extends State<OnBoardingView> {
         ),
       ],
     );
+  }
+
+  int _getNextIndex() {
+    int nextIndex = _currentIndex++;
+
+    if (nextIndex == _list.length) {
+      nextIndex = 0;
+    }
+    return nextIndex;
+  }
+
+  //*////////////////////////////*
+  int _getPreviousIndex() {
+    int previousIndex = _currentIndex++;
+
+    if (previousIndex == _list.length) {
+      previousIndex = 0;
+    }
+    return previousIndex;
   }
 
   Widget _getProperCircle(int index) {
