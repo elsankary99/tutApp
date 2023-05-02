@@ -53,6 +53,7 @@ class _OnBoardingViewState extends State<OnBoardingView> {
               statusBarBrightness: Brightness.dark),
         ),
         body: PageView.builder(
+          physics: const BouncingScrollPhysics(),
           controller: _pageController,
           itemCount: sliderViewObject.numberOfSliders,
           onPageChanged: (value) {
