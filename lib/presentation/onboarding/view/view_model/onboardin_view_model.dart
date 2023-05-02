@@ -62,11 +62,11 @@ class OnBoardingViewModel extends BaseViewModel
 //* on boarding Privet function
   void _postDataTOview() {
     inPutSLiderViewObject
-        .add(SliderViewObject(onboardingList(), _list.length, _currentIndex));
+        .add(SliderViewObject(_onboardingList(), _list.length, _currentIndex));
   }
 
 //?test
-  List<SliderObject> onboardingList() => _list;
+  List<SliderObject> _onboardingList() => _list;
   List<SliderObject> _getSliderData() => [
         SliderObject(
           AppStrings.onBoardingTitle1,

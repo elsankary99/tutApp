@@ -62,7 +62,7 @@ class _OnBoardingViewState extends State<OnBoardingView> {
             return OnBoardingPage(
               // sliderObject: _viewModel.onboardingList()[index],
 
-              sliderObject: sliderViewObject.sliderObject[index],
+              sliderObject: sliderViewObject.sliderList[index],
             );
           },
         ),

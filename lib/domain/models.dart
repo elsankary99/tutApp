@@ -5,8 +5,8 @@ class SliderObject {
 }
 
 class SliderViewObject {
-  List<SliderObject> sliderObject;
+  List<SliderObject> sliderList;
   int numberOfSliders;
   int currentIndex;
-  SliderViewObject(this.sliderObject, this.numberOfSliders, this.currentIndex);
+  SliderViewObject(this.sliderList, this.numberOfSliders, this.currentIndex);
 }
