@@ -12,11 +12,11 @@ class BaseResponse {
 @JsonSerializable()
 class CustomerResponse {
   @JsonKey(name: "id")
-  int? id;
+  String? id;
   @JsonKey(name: "name")
   String? name;
   @JsonKey(name: "numberOfNotification")
-  String? numberOfNotification;
+  int? numberOfNotification;
 
   CustomerResponse(this.id, this.name, this.numberOfNotification);
   //*from json
@@ -29,7 +29,7 @@ class CustomerResponse {
 @JsonSerializable()
 class ContactsResponse {
   @JsonKey(name: "phone")
-  int? phone;
+  String? phone;
   @JsonKey(name: "email")
   String? email;
   @JsonKey(name: "link")

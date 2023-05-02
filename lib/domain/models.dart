@@ -12,23 +12,23 @@ class SliderViewObject {
 }
 
 class Customer {
-  int id;
+  String id;
   String name;
-  String numberOfNotification;
+  int numberOfNotification;
 
   Customer(this.id, this.name, this.numberOfNotification);
 }
 
 class Contacts {
-  int phone;
+  String phone;
   String email;
   String link;
   Contacts(this.phone, this.email, this.link);
 }
 
 class Authentication {
-  Customer customer;
-  Contacts contacts;
+  Customer? customer;
+  Contacts? contacts;
 
   Authentication(this.customer, this.contacts);
 }
