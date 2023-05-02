@@ -1,7 +1,7 @@
 import 'package:tutapp/app/constants.dart';
 import 'package:tutapp/app/extention.dart';
 import 'package:tutapp/data/response/responses.dart';
-import 'package:tutapp/domain/models.dart';
+import 'package:tutapp/domain/model/models.dart';
 
 extension CustomerResponseMapper on CustomerResponse? {
   Customer toDomain() {
