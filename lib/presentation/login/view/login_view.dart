@@ -80,7 +80,7 @@ class _LoginViewState extends State<LoginView> {
                     stream: _viewModel.outIsPasswordValid,
                     builder: (context, snapshot) {
                       return TextFormField(
-                        keyboardType: TextInputType.emailAddress,
+                        keyboardType: TextInputType.visiblePassword,
                         controller: _userPasswordController,
                         decoration: InputDecoration(
                             hintText: AppStrings.password,
@@ -99,12 +99,14 @@ class _LoginViewState extends State<LoginView> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: AppPadding.p28),
                   child: StreamBuilder<bool>(
-                    stream: _viewModel.outIsUserNameValid,
+                    stream: _viewModel.outAreOutputsValid,
                     builder: (context, snapshot) {
                       return ElevatedButton(
-                          onPressed: () {
-                            _viewModel.login();
-                          },
+                          onPressed: (snapshot.data ?? false)
+                              ? () {
+                                  _viewModel.login();
+                                }
+                              : null,
                           child: const Text(AppStrings.login));
                     },
                   ),

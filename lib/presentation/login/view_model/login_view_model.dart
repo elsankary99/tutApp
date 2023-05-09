@@ -10,6 +10,8 @@ class LoginViewModel extends BaseViewModel
       StreamController<String>.broadcast();
   final StreamController _passwordStreamController =
       StreamController<String>.broadcast();
+  final StreamController _areAllinputsValidStreamController =
+      StreamController<void>.broadcast();
   var loginObject = LoginObject("", "");
   final LoginUseCase _loginUseCase;
 
@@ -20,6 +22,7 @@ class LoginViewModel extends BaseViewModel
   void disPose() {
     _userNameStreamController.close();
     _passwordStreamController.close();
+    _areAllinputsValidStreamController.close();
   }
 
   @override
@@ -28,23 +31,25 @@ class LoginViewModel extends BaseViewModel
   }
 
   @override
-  // TODO: implement inputPassword
   Sink get inputPassword => _passwordStreamController.sink;
 
   @override
-  // TODO: implement inputUserName
   Sink get inputUserName => _userNameStreamController.sink;
+  @override
+  Sink get inputAreOutputsValid => _areAllinputsValidStreamController.sink;
 
   @override
   setPassword(String password) {
     inputPassword.add(password);
     loginObject = loginObject.copyWith(password: password);
+    inputAreOutputsValid.add(null);
   }
 
   @override
   setUserName(String userName) {
     inputUserName.add(userName);
     loginObject = loginObject.copyWith(userName: userName);
+    inputAreOutputsValid.add(null);
   }
 
   @override
@@ -70,6 +75,9 @@ class LoginViewModel extends BaseViewModel
   @override
   Stream<bool> get outIsUserNameValid => _userNameStreamController.stream
       .map((userName) => _isUserNameValid(userName));
+  @override
+  Stream<bool> get outAreOutputsValid =>
+      _areAllinputsValidStreamController.stream.map((_) => _areAlliputsValid());
 
   bool _isPasswordValid(String password) {
     return password.isNotEmpty;
@@ -77,6 +85,11 @@ class LoginViewModel extends BaseViewModel
 
   bool _isUserNameValid(String userName) {
     return userName.isNotEmpty;
+  }
+
+  bool _areAlliputsValid() {
+    return _isPasswordValid(loginObject.password) &&
+        _isUserNameValid(loginObject.userName);
   }
 }
 
@@ -90,10 +103,12 @@ abstract class LoginViewModelInputs {
   Sink get inputUserName;
 
   Sink get inputPassword;
+  Sink get inputAreOutputsValid;
 }
 
 abstract class LoginViewModelOutputs {
   Stream<bool> get outIsUserNameValid;
 
   Stream<bool> get outIsPasswordValid;
+  Stream<bool> get outAreOutputsValid;
 }
