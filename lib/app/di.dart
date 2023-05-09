@@ -9,6 +9,8 @@ import 'package:tutapp/data/network/dio_factory.dart';
 import 'package:tutapp/data/network/network_info.dart';
 import 'package:tutapp/data/repository/repository_impl.dart';
 import 'package:tutapp/domain/repository/repository.dart';
+import 'package:tutapp/domain/usecase/login_use_case.dart';
+import 'package:tutapp/presentation/login/view_model/login_view_model.dart';
 
 final instance = GetIt.instance;
 Future<void> initAppModule() async {
@@ -38,4 +40,12 @@ Future<void> initAppModule() async {
   //!Repository
   instance.registerLazySingleton<Repository>(
       () => RepositoryImpl(instance(), instance()));
+}
+
+initLoginModule() {
+  if (!GetIt.I.isRegistered()) {
+    instance.registerFactory<LoginUseCase>(() => LoginUseCase(instance()));
+
+    instance.registerFactory<LoginViewModel>(() => LoginViewModel(instance()));
+  }
 }
