@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tutapp/presentation/login/view_model/login_view_model.dart';
 import 'package:tutapp/presentation/resources/assets_manager.dart';
+import 'package:tutapp/presentation/resources/color_manager.dart';
+import 'package:tutapp/presentation/resources/routs_manager.dart';
 import 'package:tutapp/presentation/resources/string_manager.dart';
 import 'package:tutapp/presentation/resources/value_manager.dart';
 
@@ -12,7 +14,7 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  final LoginViewModel _viewModel = LoginViewModel(_loginUseCase);
+  final LoginViewModel _viewModel = LoginViewModel();
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _userPasswordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -37,13 +39,16 @@ class _LoginViewState extends State<LoginView> {
   }
 
   Widget _getContentWidget() {
-    return Container(
-      child: Padding(
-        padding: const EdgeInsets.only(top: AppPadding.p100),
-        child: SingleChildScrollView(
+    return Scaffold(
+      backgroundColor: ColorManager.white,
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Padding(
+          padding: const EdgeInsets.only(top: AppPadding.p100),
           child: Form(
             key: _formKey,
             child: Column(
+              mainAxisSize: MainAxisSize.max,
               children: [
                 Center(
                   child: Image.asset(ImageAssets.splashLogo),
@@ -101,16 +106,48 @@ class _LoginViewState extends State<LoginView> {
                   child: StreamBuilder<bool>(
                     stream: _viewModel.outAreOutputsValid,
                     builder: (context, snapshot) {
-                      return ElevatedButton(
-                          onPressed: (snapshot.data ?? false)
-                              ? () {
-                                  _viewModel.login();
-                                }
-                              : null,
-                          child: const Text(AppStrings.login));
+                      return SizedBox(
+                        height: AppSize.s40,
+                        width: double.infinity,
+                        child: ElevatedButton(
+                            onPressed: (snapshot.data ?? false)
+                                ? () {
+                                    _viewModel.login();
+                                  }
+                                : null,
+                            child: const Text(AppStrings.login)),
+                      );
                     },
                   ),
                 ),
+                Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: AppPadding.p8, horizontal: AppPadding.p18),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushReplacementNamed(
+                                context, Routes.forgotPasswordRoute);
+                          },
+                          child: Text(
+                            AppStrings.forgetPassword,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushReplacementNamed(
+                                context, Routes.registerRoute);
+                          },
+                          child: Text(
+                            AppStrings.registerText,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ),
+                      ],
+                    )),
               ],
             ),
           ),

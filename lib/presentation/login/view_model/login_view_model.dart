@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:tutapp/domain/usecase/login_use_case.dart';
 import 'package:tutapp/presentation/base/base_view_model.dart';
 import 'package:tutapp/presentation/common/freezed_data_classes.dart';
 
@@ -13,9 +12,10 @@ class LoginViewModel extends BaseViewModel
   final StreamController _areAllinputsValidStreamController =
       StreamController<void>.broadcast();
   var loginObject = LoginObject("", "");
-  final LoginUseCase _loginUseCase;
+  // final LoginUseCase _loginUseCase;
 
-  LoginViewModel(this._loginUseCase);
+  // LoginViewModel(this._loginUseCase);
+  LoginViewModel();
 
   // inputs
   @override
@@ -54,17 +54,17 @@ class LoginViewModel extends BaseViewModel
 
   @override
   login() async {
-    (await _loginUseCase.execute(
-            LoginUseCaseInput(loginObject.userName, loginObject.password)))
-        .fold(
-            (failure) => {
-                  // left -> failure
-                  print(failure.message)
-                },
-            (data) => {
-                  // right -> data (success)
-                  print(data.customer?.name)
-                });
+    // (await _loginUseCase.execute(
+    //         LoginUseCaseInput(loginObject.userName, loginObject.password)))
+    //     .fold(
+    //         (failure) => {
+    //               // left -> failure
+    //               print(failure.message)
+    //             },
+    //         (data) => {
+    //               // right -> data (success)
+    //               print(data.customer?.name)
+    //             });
   }
 
   // outputs
