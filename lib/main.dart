@@ -3,7 +3,7 @@ import 'package:tutapp/app/app.dart';
 import 'package:tutapp/app/di.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized;
+  WidgetsFlutterBinding.ensureInitialized();
   await initAppModule();
   runApp(MyApp());
 }

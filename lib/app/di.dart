@@ -14,38 +14,40 @@ import 'package:tutapp/presentation/login/view_model/login_view_model.dart';
 
 final instance = GetIt.instance;
 Future<void> initAppModule() async {
+  // app module, its a module where we put all generic dependencies
+  // shared prefs instance
   final sharedPrefs = await SharedPreferences.getInstance();
-  //!SharedPreferences
-
   instance.registerLazySingleton<SharedPreferences>(() => sharedPrefs);
-  //!AppPreferences
+
+  // app prefs instance
 
   instance
       .registerLazySingleton<AppPreferences>(() => AppPreferences(instance()));
-  //!NetWorkInfo
 
+  // network info
   instance.registerLazySingleton<NetWorkInfo>(
       () => NetWorkInfoImpl(InternetConnectionChecker()));
-  //!DioFactory
 
+  // dio factory
   instance.registerLazySingleton<DioFactory>(() => DioFactory(instance()));
+
   Dio dio = await instance<DioFactory>().getDio();
-  //!AppServiceClient
-
+  //app service client
   instance.registerLazySingleton<AppServiceClient>(() => AppServiceClient(dio));
-  //!RemoteDataSource
 
+  // remote data source
   instance.registerLazySingleton<RemoteDataSource>(
-      () => RemoteDataSourceImpl(instance()));
-  //!Repository
+      () => RemoteDataSourceImpl(instance<AppServiceClient>()));
+
+  // repository
+
   instance.registerLazySingleton<Repository>(
       () => RepositoryImpl(instance(), instance()));
 }
 
 initLoginModule() {
-  if (!GetIt.I.isRegistered()) {
+  if (!GetIt.I.isRegistered<LoginUseCase>()) {
     instance.registerFactory<LoginUseCase>(() => LoginUseCase(instance()));
-
     instance.registerFactory<LoginViewModel>(() => LoginViewModel(instance()));
   }
 }

@@ -13,7 +13,7 @@ class _AppServiceClient implements AppServiceClient {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'https://72v83.wiremockapi.cloud/';
+    baseUrl ??= 'https://elsankary99.mocklab.io/';
   }
 
   final Dio _dio;
