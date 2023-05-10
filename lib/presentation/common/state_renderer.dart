@@ -22,7 +22,7 @@ class StateRenderer extends StatelessWidget {
   StateRendererType stateRendererType;
   String message;
   String title;
-  Function? retryActionFunction;
+  Function retryActionFunction;
   StateRenderer(
       {super.key,
       required this.stateRendererType,
@@ -32,14 +32,13 @@ class StateRenderer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return _getStateWidget(context);
   }
 
-  Widget _getStateWidget() {
+  Widget _getStateWidget(BuildContext context) {
     switch (stateRendererType) {
       case StateRendererType.popupLoadingState:
-        // TODO: Handle this case.
-        break;
+        return _getPopupDialog(context);
       case StateRendererType.popupErrorState:
         // TODO: Handle this case.
         break;
@@ -53,7 +52,7 @@ class StateRenderer extends StatelessWidget {
         return _getItemsColumn([
           _getAnimatedImage(),
           _getMessage(message),
-          _getRetryButton(AppStrings.retryAgin)
+          _getRetryButton(AppStrings.retryAgin, context)
         ]);
       case StateRendererType.fullScreenEmptyState:
         // TODO: Handle this case.
@@ -63,6 +62,25 @@ class StateRenderer extends StatelessWidget {
         break;
     }
   }
+
+  Widget _getPopupDialog(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadiusDirectional.circular(AppSize.s14)),
+      elevation: AppSize.s1_5,
+      backgroundColor: Colors.transparent,
+      child: Container(
+        decoration: BoxDecoration(
+            color: ColorManager.white,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(AppSize.s14),
+            boxShadow: const [BoxShadow(color: Colors.black26)]),
+        child: _getDialogContent(context),
+      ),
+    );
+  }
+
+  Widget _getDialogContent(BuildContext context) {}
 
   Widget _getItemsColumn(List<Widget> children) {
     return Column(
@@ -81,14 +99,39 @@ class StateRenderer extends StatelessWidget {
   }
 
   Widget _getMessage(String message) {
-    return Text(
-      message,
-      style: getRegularTextStyle(
-          color: ColorManager.black, fontSize: FontSize.s18),
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(AppPadding.p8),
+        child: Text(
+          message,
+          style: getRegularTextStyle(
+              color: ColorManager.black, fontSize: FontSize.s18),
+        ),
+      ),
     );
   }
 
-  Widget _getRetryButton(String buttonTitle) {
-    return ElevatedButton(onPressed: () {}, child: Text(buttonTitle));
+  Widget _getRetryButton(String buttonTitle, BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(AppPadding.p18),
+        child: SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () {
+              if (stateRendererType == StateRendererType.fullScreenErrorState) {
+                //*retry on full screen err
+                retryActionFunction.call();
+              } else {
+                //* pop up err  (OK)
+
+                Navigator.of(context).pop();
+              }
+            },
+            child: Text(buttonTitle),
+          ),
+        ),
+      ),
+    );
   }
 }
