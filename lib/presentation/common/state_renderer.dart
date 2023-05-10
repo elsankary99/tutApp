@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
+import 'package:tutapp/presentation/resources/assets_manager.dart';
 import 'package:tutapp/presentation/resources/color_manager.dart';
 import 'package:tutapp/presentation/resources/font_manager.dart';
 import 'package:tutapp/presentation/resources/string_manager.dart';
@@ -38,32 +40,41 @@ class StateRenderer extends StatelessWidget {
   Widget _getStateWidget(BuildContext context) {
     switch (stateRendererType) {
       case StateRendererType.popupLoadingState:
-        return _getPopupDialog(context);
+        return _getPopupDialog(context, [
+          _getAnimatedImage(JsonAsset.loading),
+        ]);
       case StateRendererType.popupErrorState:
-        // TODO: Handle this case.
-        break;
+        return _getPopupDialog(context, [
+          _getAnimatedImage(JsonAsset.error),
+          _getMessage(message),
+          _getRetryButton(AppStrings.ok, context)
+        ]);
+
       case StateRendererType.fullScreenLoadingState:
         return _getItemsColumn([
-          _getAnimatedImage(),
+          _getAnimatedImage(JsonAsset.loading),
           _getMessage(message),
         ]);
 
       case StateRendererType.fullScreenErrorState:
         return _getItemsColumn([
-          _getAnimatedImage(),
+          _getAnimatedImage(JsonAsset.error),
           _getMessage(message),
           _getRetryButton(AppStrings.retryAgin, context)
         ]);
       case StateRendererType.fullScreenEmptyState:
-        // TODO: Handle this case.
-        break;
+        return _getItemsColumn([
+          _getAnimatedImage(JsonAsset.empty),
+          _getMessage(message),
+        ]);
       case StateRendererType.contentState:
-        // TODO: Handle this case.
-        break;
+        return Container();
+      default:
+        return Container();
     }
   }
 
-  Widget _getPopupDialog(BuildContext context) {
+  Widget _getPopupDialog(BuildContext context, List<Widget> children) {
     return Dialog(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadiusDirectional.circular(AppSize.s14)),
@@ -75,12 +86,19 @@ class StateRenderer extends StatelessWidget {
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.circular(AppSize.s14),
             boxShadow: const [BoxShadow(color: Colors.black26)]),
-        child: _getDialogContent(context),
+        child: _getDialogContent(context, children),
       ),
     );
   }
 
-  Widget _getDialogContent(BuildContext context) {}
+  Widget _getDialogContent(BuildContext context, List<Widget> children) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: children,
+    );
+  }
 
   Widget _getItemsColumn(List<Widget> children) {
     return Column(
@@ -90,12 +108,11 @@ class StateRenderer extends StatelessWidget {
     );
   }
 
-  Widget _getAnimatedImage() {
+  Widget _getAnimatedImage(String animationName) {
     return SizedBox(
-      height: AppSize.s100,
-      width: AppSize.s100,
-      child: Container(),
-    );
+        height: AppSize.s100,
+        width: AppSize.s100,
+        child: Lottie.asset(animationName));
   }
 
   Widget _getMessage(String message) {
