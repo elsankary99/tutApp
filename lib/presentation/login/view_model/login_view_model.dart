@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:tutapp/domain/usecase/login_use_case.dart';
 import 'package:tutapp/presentation/base/base_view_model.dart';
 import 'package:tutapp/presentation/common/freezed_data_classes.dart';
+import 'package:tutapp/presentation/common/state_renderer/state_renderer_impl.dart';
 
 class LoginViewModel extends BaseViewModel
     with LoginViewModelInputs, LoginViewModelOutputs {
@@ -20,6 +21,7 @@ class LoginViewModel extends BaseViewModel
   // inputs
   @override
   void disPose() {
+    super.disPose();
     _userNameStreamController.close();
     _passwordStreamController.close();
     _areAllinputsValidStreamController.close();
@@ -27,7 +29,7 @@ class LoginViewModel extends BaseViewModel
 
   @override
   void start() {
-    // TODO: implement start
+    inputState.add(ContentState());
   }
 
   @override
