@@ -75,21 +75,45 @@ extension FlowStateExtension on FlowState {
         }
       case ErrorState:
         {
-          break;
+          dismissDialog(context);
+
+          if (getStateRendererType() == StateRendererType.popupErrorState) {
+            showPopup(context, getStateRendererType(), getMessage());
+            return contentScreenWidget;
+          } else {
+            return StateRenderer(
+                message: getMessage(),
+                stateRendererType: getStateRendererType(),
+                retryActionFunction: retryActionFunction);
+          }
         }
 
       case EmptyState:
         {
-          break;
+          return StateRenderer(
+              message: getMessage(),
+              stateRendererType: getStateRendererType(),
+              retryActionFunction: () {});
         }
       case ContentState:
         {
-          break;
+          dismissDialog(context);
+          return contentScreenWidget;
         }
       default:
         {
-          break;
+          dismissDialog(context);
+          return contentScreenWidget;
         }
+    }
+  }
+
+  _isCurrentDialogShowing(BuildContext context) =>
+      ModalRoute.of(context)?.isCurrent != true;
+
+  dismissDialog(BuildContext context) {
+    if (_isCurrentDialogShowing(context)) {
+      Navigator.of(context, rootNavigator: true).pop(true);
     }
   }
 
