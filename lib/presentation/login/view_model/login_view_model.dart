@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:tutapp/domain/usecase/login_use_case.dart';
 import 'package:tutapp/presentation/base/base_view_model.dart';
 import 'package:tutapp/presentation/common/freezed_data_classes.dart';
+import 'package:tutapp/presentation/common/state_renderer/state_renderer.dart';
 import 'package:tutapp/presentation/common/state_renderer/state_renderer_impl.dart';
 
 class LoginViewModel extends BaseViewModel
@@ -13,6 +14,8 @@ class LoginViewModel extends BaseViewModel
       StreamController<String>.broadcast();
   final StreamController _areAllinputsValidStreamController =
       StreamController<void>.broadcast();
+  final StreamController isUserLoggedInSuccessfullyStreamController =
+      StreamController<bool>();
   var loginObject = LoginObject("", "");
   final LoginUseCase _loginUseCase;
 
@@ -25,6 +28,7 @@ class LoginViewModel extends BaseViewModel
     _userNameStreamController.close();
     _passwordStreamController.close();
     _areAllinputsValidStreamController.close();
+    isUserLoggedInSuccessfullyStreamController.close();
   }
 
   @override
@@ -56,17 +60,19 @@ class LoginViewModel extends BaseViewModel
 
   @override
   login() async {
+    inputState.add(
+        LoadingState(stateRendererType: StateRendererType.popupLoadingState));
+
     (await _loginUseCase.execute(
             LoginUseCaseInput(loginObject.userName, loginObject.password)))
         .fold(
             (failure) => {
-                  // left -> failure
-                  print(failure.message)
-                },
-            (data) => {
-                  // right -> data (success)
-                  print(data.customer?.name)
-                });
+                  inputState.add(ErrorState(
+                      StateRendererType.popupErrorState, failure.message))
+                }, (data) {
+      inputState.add(ContentState());
+      isUserLoggedInSuccessfullyStreamController.add(true);
+    });
   }
 
   // outputs
