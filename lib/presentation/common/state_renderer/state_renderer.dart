@@ -11,6 +11,7 @@ enum StateRendererType {
   // !pop up state
   popupLoadingState,
   popupErrorState,
+  popupSuccess,
 
   // !full state
   fullScreenLoadingState,
