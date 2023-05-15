@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:tutapp/app/functions.dart';
 import 'package:tutapp/domain/usecase/register_use_case.dart';
 import 'package:tutapp/presentation/base/base_view_model.dart';
+import 'package:tutapp/presentation/common/freezed_data_classes.dart';
 import 'package:tutapp/presentation/resources/string_manager.dart';
 
 class RegisterViewModel extends BaseViewModel
@@ -21,6 +22,7 @@ class RegisterViewModel extends BaseViewModel
       StreamController<String>.broadcast();
 
   final RegisterUseCase _registerUseCase;
+  var registerObject = RegisterObject("", "", "", "", "", "");
   RegisterViewModel(this._registerUseCase);
 
 //? inputs
@@ -54,6 +56,67 @@ class RegisterViewModel extends BaseViewModel
 
   @override
   Sink get inputUserName => userNameStreamController.sink;
+  //*
+  @override
+  setUserName(String userName) {
+    if (_isUserNAmeVAlid(userName)) {
+      registerObject = registerObject.copyWith(userName: userName);
+    } else {
+      registerObject = registerObject.copyWith(userName: "");
+    }
+  }
+
+  @override
+  register() {
+    // TODO: implement register
+    throw UnimplementedError();
+  }
+
+  @override
+  setCountryCode(String countryCode) {
+    if (countryCode.isNotEmpty) {
+      registerObject = registerObject.copyWith(countryMobileCode: countryCode);
+    } else {
+      registerObject = registerObject.copyWith(countryMobileCode: "");
+    }
+  }
+
+  @override
+  setEmail(String email) {
+    if (isEmailValid(email)) {
+      registerObject = registerObject.copyWith(email: email);
+    } else {
+      registerObject = registerObject.copyWith(email: "");
+    }
+  }
+
+  @override
+  setMobileNumber(String mobileNumber) {
+    if (_isMobileNumberValid(mobileNumber)) {
+      registerObject = registerObject.copyWith(mobileNumber: mobileNumber);
+    } else {
+      registerObject = registerObject.copyWith(mobileNumber: "");
+    }
+  }
+
+  @override
+  setPassword(String password) {
+    if (_isPasswordValid(password)) {
+      registerObject = registerObject.copyWith(password: password);
+    } else {
+      registerObject = registerObject.copyWith(password: "");
+    }
+  }
+
+  @override
+  setProfilePicture(File profilePicture) {
+    if (profilePicture.path.isNotEmpty) {
+      registerObject =
+          registerObject.copyWith(profilePicture: profilePicture.path);
+    } else {
+      registerObject = registerObject.copyWith(profilePicture: "");
+    }
+  }
 
   //?outputs
   @override
@@ -117,6 +180,13 @@ abstract class RegisterViewModelInput {
   Sink get inputEmail;
   Sink get inputPassword;
   Sink get inputProfilePicture;
+  register();
+  setUserName(String userName);
+  setMobileNumber(String mobileNumber);
+  setCountryCode(String countryCode);
+  setEmail(String email);
+  setPassword(String password);
+  setProfilePicture(File profilePicture);
 }
 
 abstract class RegisterViewModelOutput {
