@@ -5,6 +5,7 @@ import 'package:tutapp/data/response/responses.dart';
 abstract class RemoteDataSource {
   Future<AuthenticationResponse> login(LoginRequests loginRequests);
   Future<ForgotPasswordResponse> forgotPassword(String email);
+  Future<AuthenticationResponse> register(RegisterRequests registerRequests);
 }
 
 class RemoteDataSourceImpl implements RemoteDataSource {
@@ -19,5 +20,18 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   @override
   Future<ForgotPasswordResponse> forgotPassword(String email) async {
     return await _appServiceClient.forgotPassword(email);
+  }
+
+  @override
+  Future<AuthenticationResponse> register(
+      RegisterRequests registerRequests) async {
+    return await _appServiceClient.register(
+      registerRequests.userName,
+      registerRequests.countryMobileCode,
+      registerRequests.mobileNumber,
+      registerRequests.email,
+      registerRequests.password,
+      registerRequests.profilePicture,
+    );
   }
 }
