@@ -5,6 +5,8 @@ import 'package:tutapp/app/functions.dart';
 import 'package:tutapp/domain/usecase/register_use_case.dart';
 import 'package:tutapp/presentation/base/base_view_model.dart';
 import 'package:tutapp/presentation/common/freezed_data_classes.dart';
+import 'package:tutapp/presentation/common/state_renderer/state_renderer.dart';
+import 'package:tutapp/presentation/common/state_renderer/state_renderer_impl.dart';
 import 'package:tutapp/presentation/resources/string_manager.dart';
 
 class RegisterViewModel extends BaseViewModel
@@ -28,8 +30,9 @@ class RegisterViewModel extends BaseViewModel
 //? inputs
   @override
   void start() {
-    // TODO: implement start
+    inputState.add(ContentState());
   }
+
   @override
   void disPose() {
     userNameStreamController.close();
@@ -57,6 +60,36 @@ class RegisterViewModel extends BaseViewModel
   @override
   Sink get inputUserName => userNameStreamController.sink;
   //*
+
+  @override
+  Sink get inputAllInputsValid => areAllInputsValidStreamController.sink;
+
+  @override
+  register() async {
+    inputState.add(
+        LoadingState(stateRendererType: StateRendererType.popupLoadingState));
+
+    (await _registerUseCase.execute(RegisterUseCaseInput(
+            registerObject.userName,
+            registerObject.countryMobileCode,
+            registerObject.mobileNumber,
+            registerObject.email,
+            registerObject.password,
+            registerObject.profilePicture)))
+        .fold(
+            (failure) => {
+                  // left -> failure
+                  inputState.add(ErrorState(
+                      StateRendererType.popupErrorState, failure.message))
+                }, (data) {
+      // right -> data (success)
+      // content
+      inputState.add(ContentState());
+      // navigate to main screen
+      // isUserLoggedInSuccessfullyStreamController.add(true);
+    });
+  }
+
   @override
   setUserName(String userName) {
     if (_isUserNAmeVAlid(userName)) {
@@ -64,12 +97,7 @@ class RegisterViewModel extends BaseViewModel
     } else {
       registerObject = registerObject.copyWith(userName: "");
     }
-  }
-
-  @override
-  register() {
-    // TODO: implement register
-    throw UnimplementedError();
+    validate();
   }
 
   @override
@@ -79,6 +107,7 @@ class RegisterViewModel extends BaseViewModel
     } else {
       registerObject = registerObject.copyWith(countryMobileCode: "");
     }
+    validate();
   }
 
   @override
@@ -88,6 +117,7 @@ class RegisterViewModel extends BaseViewModel
     } else {
       registerObject = registerObject.copyWith(email: "");
     }
+    validate();
   }
 
   @override
@@ -97,6 +127,7 @@ class RegisterViewModel extends BaseViewModel
     } else {
       registerObject = registerObject.copyWith(mobileNumber: "");
     }
+    validate();
   }
 
   @override
@@ -106,6 +137,7 @@ class RegisterViewModel extends BaseViewModel
     } else {
       registerObject = registerObject.copyWith(password: "");
     }
+    validate();
   }
 
   @override
@@ -116,6 +148,7 @@ class RegisterViewModel extends BaseViewModel
     } else {
       registerObject = registerObject.copyWith(profilePicture: "");
     }
+    validate();
   }
 
   //?outputs
@@ -159,7 +192,9 @@ class RegisterViewModel extends BaseViewModel
   // TODO: implement outputIsProfilePictureValid
   Stream<File> get outputIsProfilePictureValid =>
       profilePictureStreamController.stream.map((file) => file);
-
+  @override
+  Stream<bool> get outputAreAllInputsValid =>
+      areAllInputsValidStreamController.stream.map((_) => _areAllInputsValid());
 //!privet function
   bool _isUserNAmeVAlid(String userName) {
     return userName.length >= 8;
@@ -172,6 +207,19 @@ class RegisterViewModel extends BaseViewModel
   bool _isPasswordValid(String password) {
     return password.length >= 6;
   }
+
+  bool _areAllInputsValid() {
+    return registerObject.countryMobileCode.isNotEmpty &&
+        registerObject.mobileNumber.isNotEmpty &&
+        registerObject.userName.isNotEmpty &&
+        registerObject.email.isNotEmpty &&
+        registerObject.password.isNotEmpty &&
+        registerObject.profilePicture.isNotEmpty;
+  }
+
+  validate() {
+    inputAllInputsValid.add(null);
+  }
 }
 
 abstract class RegisterViewModelInput {
@@ -180,6 +228,8 @@ abstract class RegisterViewModelInput {
   Sink get inputEmail;
   Sink get inputPassword;
   Sink get inputProfilePicture;
+  Sink get inputAllInputsValid;
+
   register();
   setUserName(String userName);
   setMobileNumber(String mobileNumber);
@@ -203,4 +253,5 @@ abstract class RegisterViewModelOutput {
   Stream<String?> get outputErrorPassword;
 
   Stream<File> get outputIsProfilePictureValid;
+  Stream<bool> get outputAreAllInputsValid;
 }
